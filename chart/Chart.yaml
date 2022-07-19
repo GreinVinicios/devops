@@ -1,0 +1,11 @@
+apiVersion: v2
+name: myapp
+description: A simple Helm Chart
+version: 0.0.1
+type: application
+appVersion: "0.0.1"
+keywords:
+  - myapp
+maintainers:
+  - name: GreinVinicios
+    url: https://github.com/GreinVinicios

@@ -1,0 +1,19 @@
+{{ if .Values.myapp.create }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deploy
+  namespace: {{ .Release.Namespace | default }}
+  labels: {{- include "app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.myapp.replicas }}
+  selector:
+    matchLabels: {{- include "app.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "app.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - image: {{ .Values.myapp.image }}
+        name: myapp
+{{ end }}
