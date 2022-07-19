@@ -72,6 +72,10 @@ spec:
     path: chart
     repoURL: 'https://github.com/GreinVinicios/devops.git'
     targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+        - imgValues.yaml
   project: default
   syncPolicy:
     automated:

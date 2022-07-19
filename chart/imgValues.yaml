@@ -1,0 +1,2 @@
+myapp:
+  image: "greinvinicios/myapp:0.0.1"

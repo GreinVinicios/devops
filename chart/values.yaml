@@ -1,6 +1,5 @@
 myapp:
   create: true
-  image: "greinvinicios/myapp:0.0.1"
   replicas: 1
 
 certificate:
