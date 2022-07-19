@@ -1,0 +1,16 @@
+server:
+  extraArgs:
+    - --insecure
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: "traefik"
+      ingress.kubernetes.io/ssl-redirect: "false"
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    enabled: true
+    hosts:
+    - argocd.viniciosgrein.de
+    tls:
+      - hosts:
+          - argocd.viniciosgrein.de
+        secretName: argocd-tls
