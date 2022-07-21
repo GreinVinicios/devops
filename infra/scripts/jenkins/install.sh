@@ -6,11 +6,12 @@ function main() {
   echo 'Adding Helm repo ...'
   repoAdd
 
-  createResources
+  #createResources
 
   echo 'Installing ...'
   install
-  
+  createCertificate
+
   echo 'Getting default credentials ...'
   echo 'Default user: '
   defaultUsr
@@ -24,8 +25,8 @@ function repoAdd() {
 }
 
 function createResources() {
-  createNamespace
-  createPV
+  #createNamespace
+  #createPV
   createCertificate
 }
 
@@ -34,7 +35,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: jenkins
+  name: jenkinsci
 EOF
 }
 
@@ -43,8 +44,8 @@ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jenkins-disk
-  namespace: jenkins
+  name: jenkinsci-disk
+  namespace: jenkinsci
 spec:
   accessModes:
     - ReadWriteOnce
@@ -59,23 +60,26 @@ cat <<EOF | kubectl apply -f -
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: jenkins-certificate
-  namespace: jenkins
+  name: jenkinsci-certificate
+  namespace: jenkinsci
 spec:
   dnsNames:
-  - jenkins.viniciosgrein.de
+  - jenkinsci.viniciosgrein.de
   issuerRef:
     kind: ClusterIssuer
     name: letsencrypt-prod
-  secretName: jenkins-certificate
+  secretName: jenkinsci-certificate
 EOF
 }
 
 function install() {
-  helm install jenkins jenkins/jenkins --create-namespace \
-  --debug \
-  --namespace jenkins \
-  -f values.yaml #https://raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml
+  helm install jenkinsci jenkins/jenkins \
+  --create-namespace \
+  --namespace jenkinsci \
+  --set controller.image=greinvinicios/jenkins-custom \
+  --set controller.tag=1.0.0 \
+  -f values.yaml
+  #https://raw.githubusercontent.com/jenkinsci/helm-charts/main/charts/jenkins/values.yaml
 }
 
 function defaultUsr() {
@@ -85,9 +89,7 @@ function defaultUsr() {
 }
 
 function defaultPass() {
-  jsonpath="{.data.jenkins-admin-password}"
-  secret=$(kubectl get secret -n jenkins jenkins -o jsonpath=$jsonpath)
-  echo $(echo $secret | base64 --decode)
+  kubectl exec --namespace jenkinsci -it svc/jenkinsci -c jenkins -- /bin/cat /run/secrets/additional/chart-admin-password && echo
 }
 
 main

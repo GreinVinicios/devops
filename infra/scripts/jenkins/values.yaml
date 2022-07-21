@@ -1,21 +1,8 @@
 controller:
   ingress:
     enabled: true
-    hostName: jenkins.viniciosgrein.de
+    hostName: jenkinsci.viniciosgrein.de
     tls:
-    - secretName: jenkins-certificate
+    - secretName: jenkinsci-certificate
       hosts:
-        - jenkins.viniciosgrein.de
-  
-  installPlugins:
-    - blueocean:1.25.5
-    - credentials:1139.veb_9579fca_33b_
-    - docker-workflow:1.29
-    - git:4.11.3
-    - kubernetes:3663.v1c1e0ec5b_650
-    - docker-plugin:1.2.9
-
-persistence:
-  enabled: true
-  size: "5Gi"
-  existingClaim: "jenkins-disk"
+        - jenkinsci.viniciosgrein.de
