@@ -1,2 +1,2 @@
-myapp:
-  image: "greinvinicios/myapp:0.0.1"
+myapp: 
+ image: greinvinicios/myapp:15
